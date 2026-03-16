@@ -1,0 +1,24 @@
+name: Pipeline de Integração da Estação
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  integracao-continua:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v3
+
+      - name: Testar Script Python
+        run: python scripts/validar_dados.py
+
+      - name: Configurar Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Validar Sintaxe da Infraestrutura
+        run: |
+          cd terraform
+          terraform init -backend=false
+          terraform validate
