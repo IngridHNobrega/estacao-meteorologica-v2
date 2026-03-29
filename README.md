@@ -13,7 +13,6 @@ Foi utilizada a AWS (Amazon Web Services). O recurso provisionado é um Amazon S
 Configuração de um repositório de código:
 Todo o versionamento de código e versionamento de infraestrutura foi centralizado no GitHub.
 
-
 Implementação de um pipeline de CI usando GitHub Actions:
 O arquivo de configuração do pipeline encontra-se em `.github/workflows/ci.yml`.
 
