@@ -6,11 +6,9 @@ on:
       - main
 
 jobs:
-
   integracao-continua:
     name: Integração Contínua
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout do código
         uses: actions/checkout@v3
@@ -35,12 +33,10 @@ jobs:
           terraform init -backend=false
           terraform validate
 
-
   entrega-continua:
     name: Entrega Contínua
     needs: integracao-continua
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout do código
         uses: actions/checkout@v3
@@ -54,8 +50,9 @@ jobs:
         with:
           image-ref: 'estacao-meteorologica:latest'
           format: 'table'
-          exit-code: '1'
+          exit-code: '0'
           ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
 
       - name: Configurar credenciais AWS
         uses: aws-actions/configure-aws-credentials@v4

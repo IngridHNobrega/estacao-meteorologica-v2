@@ -1,5 +1,13 @@
+# Terraform
 .terraform/
 *.tfstate
 *.tfstate.backup
 .terraform.lock.hcl
+
+# Python
 __pycache__/
+*.py[cod]
+.env
+
+# Docker
+.dockerignore
