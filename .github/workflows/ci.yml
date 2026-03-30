@@ -1,4 +1,4 @@
-name: Pipeline de Integração da Estação
+name: Pipeline CI/CD - Estação Meteorológica
 
 on:
   push:
@@ -7,18 +7,48 @@ on:
 jobs:
   integracao-continua:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Baixar o código
+      - name: Checkout do código
         uses: actions/checkout@v3
 
-      - name: Testar Script Python
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Executar validação Python
         run: python scripts/validar_dados.py
 
       - name: Configurar Terraform
         uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.7
 
-      - name: Validar Sintaxe da Infraestrutura
+      - name: Validar Terraform
         run: |
+          set -e
           cd terraform
           terraform init -backend=false
           terraform validate
+
+  entrega-continua:
+    needs: integracao-continua
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Build da imagem Docker
+        run: docker build -t estacao-meteorologica:latest .
+
+      - name: Tag da imagem com hash
+        run: docker tag estacao-meteorologica:latest estacao-meteorologica:${{ github.sha }}
+
+      - name: Scan de vulnerabilidades (Trivy)
+        run: |
+          docker run --rm aquasec/trivy image estacao-meteorologica:latest
+
+      - name: Sucesso
+        run: echo "Pipeline executado com sucesso!"
