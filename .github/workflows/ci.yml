@@ -47,8 +47,7 @@ jobs:
         run: docker tag estacao-meteorologica:latest estacao-meteorologica:${{ github.sha }}
 
       - name: Scan de vulnerabilidades (Trivy)
-        run: |
-          docker run --rm aquasec/trivy image estacao-meteorologica:latest
+        run: docker run --rm aquasec/trivy:0.50.0 image estacao-meteorologica:latest
 
       - name: Sucesso
         run: echo "Pipeline executado com sucesso!"
